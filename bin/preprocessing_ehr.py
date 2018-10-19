@@ -10,7 +10,7 @@ folder = os.path.expanduser('~/data1/complex_disorders/data/%s/cohorts/%s/' % (n
 data_file_name = 'cohort-ehr.csv'
 stop_list_file = 'stop-words.csv'
 
-age_step = 30
+age_step = 365
 
 with open(os.path.join(folder, data_file_name), 'r') as f:
     rd = csv.reader(f)

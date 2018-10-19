@@ -29,11 +29,16 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=model_pars['learning_rate'], weight_decay=1e-5)
 
     #start the unsupervised trauning and evaluation
-    #model.cuda()
+    model.cuda()
     loss_fn = net.criterion
     print("Starting training for {} epochs...".format(model_pars['num_epochs']))
-    train_and_evaluate(model, data_generator, loss_fn, metrics, optimizer)
+    train_and_evaluate(model, data_generator, loss_fn, metrics, optimizer, experiment_folder)
 
+    ##load and evaluate best model
+    print("Evaluating best model...")
+    model.load_state_dict(torch.load(data_folder + 'best_model.pt'))
+    mrn, encoded, metrics_avg = evaluate(model, loss_fn, data_generator, metrics, best_eval=True)
+    
 if __name__ == "__main__":
     main()
     

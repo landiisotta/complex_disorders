@@ -17,14 +17,17 @@ def train(model, optimizer, loss_fn, data_iterator):
         optimizer.step()
         loss_batch.append(loss.item())
         
+        print("Batch: {}".format(idx))
+
     loss_mean = np.mean(loss_batch)
 
-def train_and_evaluate(model, data_iterator, loss_fn, metrics, optimizer):
+def train_and_evaluate(model, data_iterator, loss_fn, metrics, optimizer, model_dir):
     best_eval_acc = 0.0
     num_epochs = model_pars['num_epochs']
     for epoch in range(num_epochs):
         train(model, optimizer, loss_fn, data_iterator)
-        test_metrics = evaluate(model, loss_fn, data_iterator, metrics)
+        print("Epoch {0} of {1}".format(epoch, num_epochs))
+        _, _, test_metrics = evaluate(model, loss_fn, data_iterator, metrics)
         
         acc_epoch = test_metrics['accuracy']
         is_best = acc_epoch > beast_val_acc
@@ -38,5 +41,4 @@ def train_and_evaluate(model, data_iterator, loss_fn, metrics, optimizer):
         if(is_best):
             print("-- Found new best accuracy")
             best_eval_acc = val_acc
-
 
