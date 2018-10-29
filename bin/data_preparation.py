@@ -3,8 +3,8 @@ import os
 import numpy as np
 from collections import OrderedDict
 
-disorder = 'multiple_myeloma'
-date_time_folder = '2018-10-10-16-44-0'
+disorder = 'autism'
+date_time_folder = '2018-10-23-17-35-48'
 data_folder = os.path.expanduser('~/data1/complex_disorders/data/%s/cohorts/%s/' % (disorder, date_time_folder))
 
 with open(os.path.join(data_folder, 'ehr-shuffle.csv')) as f:

@@ -12,3 +12,7 @@
    In mt_to_ix.csv there is the new vocabulary.
 
 6) set folder paths and model's input parameters in ../bin/utils.py 
+7) run ../bin/main.py for training of the architecture. Save the best model (loss < 0.001 or end of epochs) and evaluate it, save mrns and TR + eval ecoded vectors
+   (../experiments/disease+date_time/encoded_vect.csv, mrns.csv). [Remark: for the trimmed version run code data_trimming.ipynb in cohorts/date_time and then 
+   move to bin_200 to run the architecture].
+8) run data_clustering_visualization.ipynb 

@@ -121,13 +121,13 @@ datadir = '/home/riccardo/data1/datasets/%s/' % dt
 ehrdir = datadir + 'ehr-csv/'
 
 # snomed diseases to search
-diseases = ['multiple myeloma']
+diseases = ['autism', 'autistic', 'pervasive developmental disorder', 'asperger', 'alzheimer', 'multiple myeloma']
 
 # minimum number of query diagnosis per patient
 min_diagn = 3
 
 # number of random patients to integrate the dataset with
-n_rndm = 15000
+n_rndm = 2500
 
 # include the patient with specified T2D group
 check_t2d = False
@@ -323,8 +323,8 @@ with open(filename) as f:
 
 
 # save the dataset
-myfolder = 'multiple_myeloma'
-mydir = os.path.expanduser('~/data1/complex_disorders/%s/' % myfolder)
+myfolder = 'autism'
+mydir = os.path.expanduser('~/data1/complex_disorders/data/%s/' % myfolder)
 outdir = mydir + 'cohorts/' + \
     '-'.join(map(str, list(datetime.now().timetuple()[:6])))
 os.makedirs(outdir)

@@ -2,15 +2,15 @@ import csv
 import os
 import numpy as np
 
-name_disease_folder = 'multiple_myeloma'
-datetime_folder = '2018-10-10-16-44-0'
+name_disease_folder = 'autism'
+datetime_folder = '2018-10-23-17-35-48'
 
 folder = os.path.expanduser('~/data1/complex_disorders/data/%s/cohorts/%s/' % (name_disease_folder, datetime_folder))
 
 data_file_name = 'cohort-ehr.csv'
 stop_list_file = 'stop-words.csv'
 
-age_step = 365
+age_step = 15
 
 with open(os.path.join(folder, data_file_name), 'r') as f:
     rd = csv.reader(f)

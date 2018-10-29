@@ -7,28 +7,27 @@ import utils
 
 ##define myData class
 class myData(Dataset):
-    def __init__(self, data_folder, list_mrn_file, padded_ehr_file, mt_to_ix_file):
+    def __init__(self, data_folder, list_mrn_file, padded_ehr_file):
         with open(os.path.join(data_folder, list_mrn_file)) as f:
             rd = csv.reader(f)
-            self.list_mrn = [r for r in rd]
+            self.list_mrn = [r[0] for r in rd]
         with open(os.path.join(data_folder, padded_ehr_file)) as f:
             rd = csv.reader(f)
             self.ehr = [list(map(int, r)) for r in rd]    
-        with open(os.path.join(data_folder, mt_to_ix_file)) as f:
-            rd = csv.reader(f)
-            self.vocab_size = 0
-            for r in rd:
-                self.vocab_size+=1
+        #with open(os.path.join(data_folder, mt_to_ix_file)) as f:
+            #rd = csv.reader(f)
+            #self.vocab_size = 0
+            #for r in rd:
+                #self.vocab_size+=1
                     
-
     def __getitem__(self, index):
         seq = self.ehr[index]
         pat = self.list_mrn[index]
-        return seq, pat[0]
+        return seq, pat
 
     ##len(dataset) returns the number of patients     
     def __len__(self):
-        return self.vocab_size
+        return len(self.list_mrn)
 
 def my_collate(batch):
     data = []
