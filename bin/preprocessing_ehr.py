@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 name_disease_folder = 'autism'
-datetime_folder = '2018-10-23-17-35-48'
+datetime_folder = '2018-11-20-17-20-33'
 
 folder = os.path.expanduser('~/data1/complex_disorders/data/%s/cohorts/%s/' % (name_disease_folder, datetime_folder))
 

@@ -15,20 +15,20 @@ def evaluate(model, loss_fn, data_iterator, metrics, best_eval=False):
             batch = batch.cuda()
 
             out, encoded = model(batch)
-            loss = loss_fn(out, batch-1)
+            loss = loss_fn(out, batch)
 
             out.cpu()
             encoded.cpu()
 
-            summary_batch = {metric:metrics[metric](out, batch-1)
+            summary_batch = {metric:metrics[metric](out, batch)
                              for metric in metrics}
             summary_batch['loss'] = loss.item()
             summ.append(summary_batch)
         
             #print("Batch eval: {0}".format(idx))        
             if best_eval:
-                encoded_list += encoded.tolist()
-                mrn_list.extend([m for m in mrn])
+                encoded_list.append(np.mean(encoded.tolist(), axis=0).tolist())
+                mrn_list.append(mrn)
 
         metrics_mean = {metric:np.mean([x[metric] for x in summ]) for metric in summ[0]}
         metrics_string = "--".join("{}: {:05.3f}".format(k,v) for k,v in metrics_mean.items())

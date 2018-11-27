@@ -4,7 +4,7 @@ from datetime import datetime
 
 ##PATHS
 disease_name = 'autism'
-date_time_folder = '2018-10-28-7-42-17'
+date_time_folder = '2018-10-29-9-55-11'
 data_folder = os.path.expanduser('~/data1/complex_disorders/data/%s/cohorts/%s/' % (disease_name, date_time_folder))
 mrn_file = 'TRIMMEDordered_mrns.csv'
 trimmed_ehr_file = 'trimmed_ehrs.csv'
@@ -19,7 +19,7 @@ os.makedirs(experiment_folder)
 model_pars = {'num_epochs' : 500,
               'batch_size' : 32,
               'embedding_dim' : 128,
-              'kernel_size' : 9,
+              'kernel_size' : 5,
               'learning_rate' : 0.001}
 
 

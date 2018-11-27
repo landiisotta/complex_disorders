@@ -2,7 +2,7 @@ import csv
 import os
 
 import utils
-from utils import disease_name, date_time_folder, data_folder, mrn_file, padded_ehr_file, mt_to_ix_file, experiment_folder, model_pars
+from utils import disease_name, date_time_folder, data_folder, ehr_file, mt_to_ix_file, experiment_folder, model_pars, L
 
 from model.data_loader import myData, my_collate
 import model.net as net
@@ -32,15 +32,15 @@ def main():
     torch.cuda.manual_seed(123)
 
     ##Import data
-    data = myData(data_folder, mrn_file, padded_ehr_file)
+    data = myData(data_folder, ehr_file)
     data_generator = DataLoader(data, model_pars['batch_size'], shuffle=True, collate_fn=my_collate)
     #define model and optimizer
-    print("cohort numerosity:{0} -- max_seq_length:{1}".format(len(data), len(list(filter(lambda x: x > 0, data[0][0])))))
-    model = net.ehrEncoding(vocab_size, len(data[0][0]), model_pars['embedding_dim'], model_pars['kernel_size'])
+    print("cohort numerosity:{0} -- max_seq_length:{1}".format(len(data), L))
+    model = net.ehrEncoding(vocab_size, L, model_pars['embedding_dim'], model_pars['kernel_size'])
     #model = nn.DataParallel(model, device_ids=[1,2,3])
     optimizer = torch.optim.Adam(model.parameters(), lr=model_pars['learning_rate'], weight_decay=1e-5)
 
-    #start the unsupervised trauning and evaluation
+    #start the unsupervised training and evaluation
     model.cuda()
     loss_fn = net.criterion
     print("Starting training for {} epochs...".format(model_pars['num_epochs']))

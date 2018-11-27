@@ -121,13 +121,13 @@ datadir = '/home/riccardo/data1/datasets/%s/' % dt
 ehrdir = datadir + 'ehr-csv/'
 
 # snomed diseases to search
-diseases = ['autism', 'autistic', 'pervasive developmental disorder', 'asperger', 'alzheimer', 'multiple myeloma']
+diseases = ['autism', 'active disintegrative psychoses', 'psychosis with origin in childhood', 'pervasive developmental disorder']
 
 # minimum number of query diagnosis per patient
 min_diagn = 3
 
 # number of random patients to integrate the dataset with
-n_rndm = 2500
+n_rndm = 2000
 
 # include the patient with specified T2D group
 check_t2d = False
@@ -165,16 +165,21 @@ icd10to9 = _load_icd_map(datadir + 'mappings/icd10-to-icd9.txt')
 # get query ICD codes
 ##icds = set of icd9/10 codes related to diseases
 icds = set()
+disease_icds_dict = {}
 for q in sorted(diseases):
     qres = filter(lambda x: x.find(q)!=-1, mp_snomed)
+    icd_codes = []
     for r in qres:
         icds |= mp_snomed[r]
+        icd_codes.extend(list(mp_snomed[r]))
         for d in mp_snomed[r]:
             try:
                 for c in icd9to10[d.replace('.', '')]:
                     icds.add(c[:3] + '.' + c[3:])
+                    icd_codes.append(c[:3] + '.' + c[3:])
             except Exception:
                 pass
+    disease_icds_dict[q] = list(set(icd_codes))
 
 """
 ##################
@@ -188,6 +193,7 @@ Add the command: icds = set([COD1, COD2, ..., CODn])
 filenames = [ehrdir + 'icd9/person-icd9.csv',
              ehrdir + 'icd10/person-icd10.csv']
 icd_mrns = {}
+mrns_icds = {}
 all_mrns = {}
 for fname in filenames:
     with open(fname) as f:
@@ -195,6 +201,7 @@ for fname in filenames:
         for r in rd:
             if r[1] in icds:
                 icd_mrns.setdefault(r[0], set()).add((r[1], r[2]))
+                mrns_icds.setdefault(r[0], set()).add(r[1])
             all_mrns.setdefault(r[0], set()).add(r[1])
 ##icd_mrns=dictionary with 'mrn'={(icd9/10_diseasesDiag, time_of_diag)}
 ##all_mrns=dictionary with all 'mrn'={icd9/10_diag}
@@ -329,7 +336,7 @@ outdir = mydir + 'cohorts/' + \
     '-'.join(map(str, list(datetime.now().timetuple()[:6])))
 os.makedirs(outdir)
 
-ivcb = {p: i+1 for i, p in enumerate(sorted(vocab))}
+ivcb = {p: i for i, p in enumerate(sorted(vocab))}
 out_vcb = [('LABEL', 'CODE')] + sorted(ivcb.items())
 outfile = outdir + '/cohort-vocab.csv'
 _save_dataset(outfile, out_vcb)
@@ -344,3 +351,15 @@ outfile = outdir + '/cohort-person.csv'
 out_person = [('MRN', 'GENDER', 'RACE', 'MOB', 'YOB')] + \
     [([el[0]] + el[1]) for el in sorted(person.items())]
 _save_dataset(outfile, out_person)
+
+out_dis = []
+for dis, icds in disease_icds_dict.items():
+    out_dis.append([dis] + icds)
+outfile = outdir + '/cohort-diseases.csv'
+_save_dataset(outfile, out_dis)
+
+out_mrns = []
+for mrn, icds in mrns_icds.items():
+    out_mrns.append([mrn] + list(icds))
+outfile = outdir + '/cohort-mrns_icds.csv'
+_save_dataset(outfile, out_mrns)

@@ -4,7 +4,7 @@ import numpy as np
 from collections import OrderedDict
 
 disorder = 'autism'
-date_time_folder = '2018-10-28-7-42-17'
+date_time_folder = '2018-10-29-9-55-11'
 data_folder = os.path.expanduser('~/data1/complex_disorders/data/%s/cohorts/%s/' % (disorder, date_time_folder))
 
 with open(os.path.join(data_folder, 'ehr-shuffle.csv')) as f:

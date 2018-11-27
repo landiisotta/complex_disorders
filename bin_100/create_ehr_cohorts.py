@@ -127,7 +127,7 @@ diseases = ['autism', 'autistic', 'pervasive developmental disorder', 'asperger'
 min_diagn = 3
 
 # number of random patients to integrate the dataset with
-n_rndm = 5000
+n_rndm = 10000
 
 # include the patient with specified T2D group
 check_t2d = False

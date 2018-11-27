@@ -8,20 +8,20 @@ from evaluate import evaluate
 def train(model, optimizer, loss_fn, data_iterator):
     model.train()
     encoded_list = []
-    mrn_list = []   
     loss_batch = []
+    mrn_list = []
     for idx, (batch, mrn) in enumerate(data_iterator):
         batch = batch.cuda()
             
         optimizer.zero_grad()
         out, encoded_vect = model(batch)
-        loss = loss_fn(out, batch-1)
+        loss = loss_fn(out, batch)
         loss.backward()
         optimizer.step()
         loss_batch.append(loss.item())
         
-        encoded_list += encoded_vect.tolist()
-        mrn_list.extend([m for m in mrn])
+        encoded_list.append(np.mean(encoded_vect.tolist(), axis=0).tolist())
+        mrn_list.append(mrn)
         #print("Batch: {}".format(idx))
 
     loss_mean = np.mean(loss_batch)
@@ -68,7 +68,7 @@ def train_and_evaluate(model, data_iterator, loss_fn, optimizer, model_dir, metr
             #                      folder=model_dir)  
             print("-- Found new best  at epoch {0}".format(epoch))
             print("Evaluating the model...")
-            mrn, enoded, test_metrics = evaluate(model, loss_fn, data_iterator, metrics, best_eval=True)
+            mrn, encoded, test_metrics = evaluate(model, loss_fn, data_iterator, metrics, best_eval=True)
 
                 #acc_epoch = test_metrics['accuracy']
                 #is_best = acc_epoch < best_eval_acc
