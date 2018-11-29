@@ -1,25 +1,20 @@
 import csv 
 import os
 import numpy as np
-
-name_disease_folder = 'autism'
-datetime_folder = '2018-11-20-17-20-33'
-
-folder = os.path.expanduser('~/data1/complex_disorders/data/%s/cohorts/%s/' % (name_disease_folder, datetime_folder))
+from create_ehr_cohorts import outdir
+from utils import data_preprocessing_pars
 
 data_file_name = 'cohort-ehr.csv'
 stop_list_file = 'stop-words.csv'
 
-age_step = 15
-
-with open(os.path.join(folder, data_file_name), 'r') as f:
+with open(os.path.join(outdir, data_file_name), 'r') as f:
     rd = csv.reader(f)
     next(rd)
     ehrs = {}
     for r in rd:
         ehrs.setdefault(r[0], list()).append([r[1], int(r[2])])
 
-with open(os.path.join(folder, stop_list_file), 'r') as f:
+with open(os.path.join(outdir, stop_list_file), 'r') as f:
     rd = csv.reader(f, quotechar="'")
     stop_words = next(rd)
 
@@ -33,7 +28,7 @@ for mrn in ehrs:
 
 ehrs_subseq = {}
 for mrn in ehrs_rid:
-    step = ehrs_rid[mrn][0][1] + age_step
+    step = ehrs_rid[mrn][0][1] + data_preprocessing_pars['age_step']
     tmp = set()
     for el in ehrs_rid[mrn]:
         if el[1] <= step:
@@ -41,9 +36,9 @@ for mrn in ehrs_rid:
         else:
             ehrs_subseq.setdefault(mrn, list()).append(tmp)
             tmp = set()
-            step = el[1] + age_step
+            step = el[1] + data_preprocessing_pars['age_step']
             tmp.add(int(el[0]))
-    ehrs_subseq.setdefault(mrn, list()).append(tmp)
+ehrs_subseq.setdefault(mrn, list()).append(tmp)
 
 ehrs_subseq_shuff = {}
 for mrn in ehrs_subseq:
@@ -53,7 +48,7 @@ for mrn in ehrs_subseq:
         ehrs_subseq_shuff.setdefault(mrn, list()).append(tmp)
 
 
-with open(os.path.join(folder, 'ehr-shuffle.csv'), 'w') as f:
+with open(os.path.join(outdir, 'ehr-shuffle.csv'), 'w') as f:
     wr = csv.writer(f)
     for mrn in ehrs_subseq_shuff:
         for el in ehrs_subseq_shuff[mrn]:
